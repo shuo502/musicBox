@@ -3,7 +3,7 @@ import json, requests, hashlib, random
 from urllib import quote
 #import urllib.request python3
 
-app = Flask(__name__)
+app = Flask(__name__)   
 
 @app.route("/test", methods=['GET','POST'])
 def test():
