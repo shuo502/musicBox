@@ -2,3 +2,9 @@
 
 端口80：nginx
 端口928：flask
+
+目前问题：
+
+$host作用
+
+eapi 500
