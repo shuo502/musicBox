@@ -21,6 +21,30 @@ def encrypted_id(id):
 	result = result.replace('+', '-')
 	return result
 
+def get_ios_response(player_or_download, retry=10):
+	print("into ios")
+	if (retry <= 0):
+		abort(502)
+	try:
+		origin_result = requests.post('http://music.163.com/eapi/song/enhance/' + player_or_download + '/url', 
+		data={'params':request.form['params']}, timeout=1.5)
+		print(request.form)
+	except Exception:
+		print('timeout in get_ios_response(). Retrying.')
+		return get_ios_response(player_or_download, retry-1)
+	origin_result_json = json.loads(origin_result.content)
+	if (player_or_download == 'player' and origin_result_json['data'][0]['url'] != None):
+		print('Returning original player result')
+		return origin_result.text
+	if (player_or_download == 'download' and origin_result_json['data']['url'] != None):
+		print('Returning original download result')
+		return origin_result.text
+	if (player_or_download == 'player'):
+		song_id = str(origin_result_json['data'][0]['id'])
+	else:
+		song_id = str(origin_result_json['data']['id'])
+	return jsonify(get_music_resource(song_id, player_or_download))
+	
 @app.route("/eapi/song/enhance/<player_or_download>/url", methods=['GET','POST'])
 def get_song_api(player_or_download, retry=10):
 	if (retry <= 0):

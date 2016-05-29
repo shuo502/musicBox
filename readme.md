@@ -8,3 +8,5 @@
 $host作用
 
 eapi 500
+
+ios method lost
